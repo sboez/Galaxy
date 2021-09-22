@@ -5,8 +5,12 @@ export default class Galaxy {
         this.scene = scene;
 
         this.parameters = {
-            count: 1000,
-            size: 0.02
+            count: 10000,
+            size: 0.02,
+            radius: 5,
+            branches: 3,
+            spin: 1,
+            randomness: 0.02
         }
 
         this.geometry = null;
@@ -29,9 +33,17 @@ export default class Galaxy {
         for (let i = 0; i < this.parameters.count; ++i) {
             const i3 = i * 3;
 
-            this.positions[i3] = (Math.random() - 0.5) * 3
-            this.positions[i3 + 1] = (Math.random() - 0.5) * 3
-            this.positions[i3 + 2] = (Math.random() - 0.5) * 3
+            const radius = Math.random() * this.parameters.radius;
+            const spinAngle = radius * this.parameters.spin;
+            const branchAngle = (i % this.parameters.branches) / this.parameters.branches * Math.PI * 2;
+
+            const randomX = (Math.random() - 0.5) * this.parameters.randomness;
+            const randomY = (Math.random() - 0.5) * this.parameters.randomness;
+            const randomZ = (Math.random() - 0.5) * this.parameters.randomness;
+
+            this.positions[i3] = Math.cos(branchAngle + spinAngle) * radius + randomX;
+            this.positions[i3 + 1] = randomY;
+            this.positions[i3 + 2] = Math.sin(branchAngle + spinAngle) * radius + randomZ;
         }
 
         this.geometry.setAttribute('position', new THREE.BufferAttribute(this.positions, 3));
