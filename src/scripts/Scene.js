@@ -12,21 +12,11 @@ export default class Scene extends THREE.Scene {
 
 	setScene() {
 		this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, .1, 100);
-		this.camera.position.z = 3;
+		this.camera.position.set(3, 3, 3);
 
-		// this.setCube();
 		this.setLights();
 		this.setRenderer();
 		this.setControls();
-	}
-
-	setCube() {
-		const cube = new THREE.Mesh(
-			new THREE.BoxGeometry(1, 1, 1),
-			new THREE.MeshBasicMaterial()
-		);
-
-		this.add(cube);
 	}
 
 	setLights() {

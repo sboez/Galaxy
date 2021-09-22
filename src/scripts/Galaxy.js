@@ -1,4 +1,6 @@
 import * as THREE from 'three';
+import galaxyVertexShader from '../shaders/vertex.glsl';
+import galaxyFragmentShader from '../shaders/fragment.glsl';
 
 export default class Galaxy {
     constructor(scene) {
@@ -9,7 +11,6 @@ export default class Galaxy {
             size: 0.02,
             radius: 5,
             branches: 3,
-            spin: 1,
             randomness: 0.2,
             randomnessPower: 3,
             insideColor: '#ff6030',
@@ -42,16 +43,15 @@ export default class Galaxy {
             const i3 = i * 3;
 
             const radius = Math.random() * this.parameters.radius;
-            const spinAngle = radius * this.parameters.spin;
             const branchAngle = (i % this.parameters.branches) / this.parameters.branches * Math.PI * 2;
 
             const randomX = Math.pow(Math.random(), this.parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * this.parameters.randomness * radius;
             const randomY = Math.pow(Math.random(), this.parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * this.parameters.randomness * radius;
             const randomZ = Math.pow(Math.random(), this.parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * this.parameters.randomness * radius;
 
-            this.positions[i3] = Math.cos(branchAngle + spinAngle) * radius + randomX;
+            this.positions[i3] = Math.cos(branchAngle) * radius + randomX;
             this.positions[i3 + 1] = randomY;
-            this.positions[i3 + 2] = Math.sin(branchAngle + spinAngle) * radius + randomZ;
+            this.positions[i3 + 2] = Math.sin(branchAngle) * radius + randomZ;
 
             const mixedColor = colorInside.clone();
             mixedColor.lerp(colorOutside, radius / this.parameters.radius);
@@ -64,12 +64,15 @@ export default class Galaxy {
         this.geometry.setAttribute('position', new THREE.BufferAttribute(this.positions, 3));
         this.geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
-        this.material = new THREE.PointsMaterial({
-            size: this.parameters.size,
-            sizeAttenuation: true,
+        this.material = new THREE.ShaderMaterial({
             depthWrite: false,
             blending: THREE.AdditiveBlending,
-            vertexColors: true
+            vertexColors: true,
+            vertexShader: galaxyVertexShader,
+            fragmentShader: galaxyFragmentShader,
+            uniforms: {
+                uSize: { value: 8 }
+            }
         })
 
         this.points = new THREE.Points(this.geometry, this.material);
