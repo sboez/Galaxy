@@ -75,7 +75,7 @@ export default class Galaxy {
             vertexShader: galaxyVertexShader,
             fragmentShader: galaxyFragmentShader,
             uniforms: {
-                uSize: { value: 8 * this.scene.renderer.getPixelRatio() }
+                uSize: { value: 30 * this.scene.renderer.getPixelRatio() }
             }
         })
 
