@@ -16,5 +16,8 @@ export default class Gui {
 		gui.add(this.galaxy.parameters, 'branches').min(2).max(20).step(1).onFinishChange(() => this.galaxy.setGalaxy());
 		gui.add(this.galaxy.parameters, 'spin').min(-5).max(5).step(0.001).onFinishChange(() => this.galaxy.setGalaxy());
 		gui.add(this.galaxy.parameters, 'randomness').min(0).max(2).step(0.001).onFinishChange(() => this.galaxy.setGalaxy());
+		gui.add(this.galaxy.parameters, 'randomnessPower').min(1).max(10).step(0.001).onFinishChange(() => this.galaxy.setGalaxy());
+		gui.addColor(this.galaxy.parameters, 'insideColor').onFinishChange(() => this.galaxy.setGalaxy());
+		gui.addColor(this.galaxy.parameters, 'outsideColor').onFinishChange(() => this.galaxy.setGalaxy());
 	}
 }
