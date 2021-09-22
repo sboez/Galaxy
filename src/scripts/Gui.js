@@ -1,41 +1,16 @@
 import * as dat from 'dat.gui';
 
-const gui = new dat.GUI();
+const gui = new dat.GUI({ width: 400 });
 
 export default class Gui {
-	constructor() {
+	constructor(galaxy) {
+		this.galaxy = galaxy;
+
 		this.addGUI();
 	}
 
 	addGUI() {
-		const params = {
-			posX: 0,
-			posY: 0,
-			posZ: 0,
-			scaleX: 0,
-			scaleY: 0,
-			scaleZ: 0,
-			rotY: 0,
-			rotX: 0,
-		}
-		this.setGUI(params);
-	}
-
-	setGUI(params) {
-		this.setPosition(params);
-		this.setScale(params);
-		this.setRotation(params);
-	}
-
-	setPosition(params) {
-		const folderPos = gui.addFolder('Position');
-	}
-
-	setScale(params) {
-		const folderScale = gui.addFolder('Scale');
-	}
-
-	setRotation(params) {
-		const folderRot = gui.addFolder('Rotation');
+		gui.add(this.galaxy.parameters, 'count').min(100).max(100000).step(10).onFinishChange(() => this.galaxy.setGalaxy());
+		gui.add(this.galaxy.parameters, 'size').min(0.001).max(0.1).step(0.001).onFinishChange(() => this.galaxy.setGalaxy());
 	}
 }

@@ -9,10 +9,20 @@ export default class Galaxy {
             size: 0.02
         }
 
+        this.geometry = null;
+        this.material = null;
+        this.points = null;
+
         this.setGalaxy();
     }
 
     setGalaxy() {
+        if (this.points !== null) {
+            this.geometry.dispose();
+            this.material.dispose();
+            this.scene.remove(this.points);
+        }
+
         this.geometry = new THREE.BufferGeometry();
         this.positions = new Float32Array(this.parameters.count * 3);
 
@@ -34,6 +44,7 @@ export default class Galaxy {
         })
 
         this.points = new THREE.Points(this.geometry, this.material);
+
         this.scene.add(this.points);
     }
 }

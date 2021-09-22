@@ -1,5 +1,6 @@
 import Scene from './scripts/Scene';
 import Galaxy from './scripts/Galaxy';
+import * as dat from 'dat.gui';
 import Gui from './scripts/Gui';
 
 import * as THREE from 'three';
@@ -16,7 +17,7 @@ class App {
 	async letsPlay() {
 		this.scene = new Scene();
 		this.galaxy = new Galaxy(this.scene);
-		this.gui = new Gui();
+		this.gui = new Gui(this.galaxy);
 
 		this.init();
 		this.animate();
@@ -35,9 +36,9 @@ class App {
 	}
 
 	animate() {
-		// const clock = new THREE.Clock()
+		const clock = new THREE.Clock()
 
-		// const elapsedTime = clock.getElapsedTime();
+		const elapsedTime = clock.getElapsedTime();
 
 		this.scene.controls.update();
 		this.scene.renderer.render(this.scene, this.scene.camera);
