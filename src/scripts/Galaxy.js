@@ -33,8 +33,9 @@ export default class Galaxy {
 
         this.geometry = new THREE.BufferGeometry();
 
-        this.positions = new Float32Array(this.parameters.count * 3);
+        const positions = new Float32Array(this.parameters.count * 3);
         const colors = new Float32Array(this.parameters.count * 3);
+        const scales = new Float32Array(this.parameters.count);
 
         const colorInside = new THREE.Color(this.parameters.insideColor);
         const colorOutside = new THREE.Color(this.parameters.outsideColor);
@@ -49,9 +50,9 @@ export default class Galaxy {
             const randomY = Math.pow(Math.random(), this.parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * this.parameters.randomness * radius;
             const randomZ = Math.pow(Math.random(), this.parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * this.parameters.randomness * radius;
 
-            this.positions[i3] = Math.cos(branchAngle) * radius + randomX;
-            this.positions[i3 + 1] = randomY;
-            this.positions[i3 + 2] = Math.sin(branchAngle) * radius + randomZ;
+            positions[i3] = Math.cos(branchAngle) * radius + randomX;
+            positions[i3 + 1] = randomY;
+            positions[i3 + 2] = Math.sin(branchAngle) * radius + randomZ;
 
             const mixedColor = colorInside.clone();
             mixedColor.lerp(colorOutside, radius / this.parameters.radius);
@@ -59,10 +60,13 @@ export default class Galaxy {
             colors[i3] = mixedColor.r;
             colors[i3 + 1] = mixedColor.g;
             colors[i3 + 2] = mixedColor.b;
+
+            scales[i] = Math.random();
         }
 
-        this.geometry.setAttribute('position', new THREE.BufferAttribute(this.positions, 3));
+        this.geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
         this.geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+        this.geometry.setAttribute('sScale', new THREE.BufferAttribute(scales, 1));
 
         this.material = new THREE.ShaderMaterial({
             depthWrite: false,
@@ -71,7 +75,7 @@ export default class Galaxy {
             vertexShader: galaxyVertexShader,
             fragmentShader: galaxyFragmentShader,
             uniforms: {
-                uSize: { value: 8 }
+                uSize: { value: 8 * this.scene.renderer.getPixelRatio() }
             }
         })
 
