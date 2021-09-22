@@ -4,12 +4,15 @@ import * as dat from 'dat.gui';
 import Gui from './scripts/Gui';
 
 import * as THREE from 'three';
+import { Material } from 'three';
 
 class App {
 	constructor() {
 		this.scene = null;
 		this.galaxy = null;
 		this.gui = null;
+
+		this.clock = new THREE.Clock();
 
 		this.letsPlay();
 	}
@@ -36,9 +39,9 @@ class App {
 	}
 
 	animate() {
-		const clock = new THREE.Clock()
+		const elapsedTime = this.clock.getElapsedTime();
 
-		const elapsedTime = clock.getElapsedTime();
+		this.galaxy.material.uniforms.uTime.value = elapsedTime;
 
 		this.scene.controls.update();
 		this.scene.renderer.render(this.scene, this.scene.camera);
