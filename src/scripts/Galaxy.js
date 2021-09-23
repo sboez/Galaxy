@@ -36,6 +36,7 @@ export default class Galaxy {
         const positions = new Float32Array(this.parameters.count * 3);
         const colors = new Float32Array(this.parameters.count * 3);
         const scales = new Float32Array(this.parameters.count);
+        const randomness = new Float32Array(this.parameters.count * 3);
 
         const colorInside = new THREE.Color(this.parameters.insideColor);
         const colorOutside = new THREE.Color(this.parameters.outsideColor);
@@ -46,13 +47,17 @@ export default class Galaxy {
             const radius = Math.random() * this.parameters.radius;
             const branchAngle = (i % this.parameters.branches) / this.parameters.branches * Math.PI * 2;
 
+            positions[i3] = Math.cos(branchAngle) * radius;
+            positions[i3 + 1] = 0;
+            positions[i3 + 2] = Math.sin(branchAngle) * radius;
+
             const randomX = Math.pow(Math.random(), this.parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * this.parameters.randomness * radius;
             const randomY = Math.pow(Math.random(), this.parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * this.parameters.randomness * radius;
             const randomZ = Math.pow(Math.random(), this.parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * this.parameters.randomness * radius;
 
-            positions[i3] = Math.cos(branchAngle) * radius + randomX;
-            positions[i3 + 1] = randomY;
-            positions[i3 + 2] = Math.sin(branchAngle) * radius + randomZ;
+            randomness[i3] = randomX;
+            randomness[i3 + 1] = randomY;
+            randomness[i3 + 2] = randomZ;
 
             const mixedColor = colorInside.clone();
             mixedColor.lerp(colorOutside, radius / this.parameters.radius);
@@ -66,7 +71,8 @@ export default class Galaxy {
 
         this.geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
         this.geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-        this.geometry.setAttribute('sScale', new THREE.BufferAttribute(scales, 1));
+        this.geometry.setAttribute('aScale', new THREE.BufferAttribute(scales, 1));
+        this.geometry.setAttribute('aRandomness', new THREE.BufferAttribute(randomness, 3));
 
         this.material = new THREE.ShaderMaterial({
             depthWrite: false,

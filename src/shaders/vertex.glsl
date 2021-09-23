@@ -1,7 +1,8 @@
 uniform float uTime;
 uniform float uSize;
 
-attribute float sScale;
+attribute float aScale;
+attribute vec3 aRandomness;
 
 varying vec3 vColor;
 
@@ -16,11 +17,13 @@ void main()
     modelPosition.x = cos(angle) * distanceToCenter;
     modelPosition.z = sin(angle) * distanceToCenter;
 
+    modelPosition.xyz += aRandomness;
+
     vec4 viewPosition = viewMatrix * modelPosition;
     vec4 projectedPosition = projectionMatrix * viewPosition;
     gl_Position = projectedPosition;
 
-    gl_PointSize = uSize * sScale;
+    gl_PointSize = uSize * aScale;
     gl_PointSize *= (1.0 / -viewPosition.z);
 
     vColor = color;
