@@ -2,4 +2,6 @@ node_modules
 dist
 .DS_Store
 .gitkeep
+.firebase
+.firebaserc
 package-lock.json
