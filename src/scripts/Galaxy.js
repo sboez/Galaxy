@@ -7,14 +7,14 @@ export default class Galaxy {
         this.scene = scene;
 
         this.parameters = {
-            count: 10000,
+            count: 20000,
             size: 0.02,
-            radius: 5,
-            branches: 3,
-            randomness: 0.2,
-            randomnessPower: 3,
-            insideColor: '#ff6030',
-            outsideColor: '#1b3984'
+            radius: 4,
+            branches: 5,
+            randomness: 0.3,
+            randomnessPower: 4,
+            insideColor: '#ed7b4d',
+            outsideColor: '#4657de'
         }
 
         this.geometry = null;
@@ -25,11 +25,7 @@ export default class Galaxy {
     }
 
     setGalaxy() {
-        if (this.points !== null) {
-            this.geometry.dispose();
-            this.material.dispose();
-            this.scene.remove(this.points);
-        }
+        this.removeGalaxy();
 
         this.geometry = new THREE.BufferGeometry();
 
@@ -44,6 +40,7 @@ export default class Galaxy {
         for (let i = 0; i < this.parameters.count; ++i) {
             const i3 = i * 3;
 
+            // Set position
             const radius = Math.random() * this.parameters.radius;
             const branchAngle = (i % this.parameters.branches) / this.parameters.branches * Math.PI * 2;
 
@@ -59,6 +56,7 @@ export default class Galaxy {
             randomness[i3 + 1] = randomY;
             randomness[i3 + 2] = randomZ;
 
+            // Set color
             const mixedColor = colorInside.clone();
             mixedColor.lerp(colorOutside, radius / this.parameters.radius);
 
@@ -66,6 +64,7 @@ export default class Galaxy {
             colors[i3 + 1] = mixedColor.g;
             colors[i3 + 2] = mixedColor.b;
 
+            // Set scale
             scales[i] = Math.random();
         }
 
@@ -74,6 +73,19 @@ export default class Galaxy {
         this.geometry.setAttribute('aScale', new THREE.BufferAttribute(scales, 1));
         this.geometry.setAttribute('aRandomness', new THREE.BufferAttribute(randomness, 3));
 
+        this.setMaterial();
+        this.setPoints();
+    }
+
+    removeGalaxy() {
+        if (this.points !== null) {
+            this.geometry.dispose();
+            this.material.dispose();
+            this.scene.remove(this.points);
+        }
+    }
+
+    setMaterial() {
         this.material = new THREE.ShaderMaterial({
             depthWrite: false,
             blending: THREE.AdditiveBlending,
@@ -85,9 +97,10 @@ export default class Galaxy {
                 uSize: { value: 30 * this.scene.renderer.getPixelRatio() }
             }
         })
+    }
 
+    setPoints() {
         this.points = new THREE.Points(this.geometry, this.material);
-
         this.scene.add(this.points);
     }
 }

@@ -1,6 +1,6 @@
 import * as dat from 'dat.gui';
 
-const gui = new dat.GUI({ width: 400 });
+const gui = new dat.GUI({ width: 300 });
 
 export default class Gui {
 	constructor(galaxy) {

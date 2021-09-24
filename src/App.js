@@ -1,10 +1,7 @@
 import Scene from './scripts/Scene';
 import Galaxy from './scripts/Galaxy';
-import * as dat from 'dat.gui';
 import Gui from './scripts/Gui';
-
 import * as THREE from 'three';
-import { Material } from 'three';
 
 class App {
 	constructor() {
